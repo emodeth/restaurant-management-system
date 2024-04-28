@@ -1,4 +1,5 @@
 import { createContext, useContext, useState } from "react";
+import { menu as menuUtil } from "../utils/menu";
 
 const MenuContext = createContext();
 
@@ -37,6 +38,45 @@ function MenuProvider({ children }) {
     8: "free",
     9: "free",
   });
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [menu, setMenu] = useState(menuUtil);
+  const [sortingOrder, setSortingOrder] = useState(true); // true is descending order false is ascending order
+
+  function bubbleSort(array, order) {
+    const length = array.length;
+
+    if (order) {
+      for (let i = 0; i < length - 1; i++) {
+        for (let j = 0; j < length - i - 1; j++) {
+          if (Number(array[j].price) > Number(array[j + 1].price)) {
+            // Swap elements
+            const temp = array[j];
+            array[j] = array[j + 1];
+            array[j + 1] = temp;
+          }
+        }
+      }
+    } else {
+      for (let i = 0; i < length - 1; i++) {
+        for (let j = 0; j < length - i - 1; j++) {
+          if (Number(array[j].price) <= Number(array[j + 1].price)) {
+            // Swap elements
+            const temp = array[j];
+            array[j] = array[j + 1];
+            array[j + 1] = temp;
+          }
+        }
+      }
+    }
+
+    setSortingOrder((sortingOrder) => !sortingOrder);
+
+    return array;
+  }
 
   function handleAdd(tableId, item) {
     if (carts[tableId].some((cartItem) => cartItem.id === item.id)) return;
@@ -125,6 +165,19 @@ function MenuProvider({ children }) {
         setStatus,
         handlePay,
         handleService,
+        isLoggedIn,
+        setIsLoggedIn,
+        username,
+        setUsername,
+        password,
+        setPassword,
+        searchQuery,
+        setSearchQuery,
+        menu,
+        setMenu,
+        sortingOrder,
+        setSortingOrder,
+        bubbleSort,
       }}
     >
       {children}

@@ -1,11 +1,23 @@
 import { useMenu } from "../context/MenuContext";
-import { menu, categories } from "../utils/menu";
+import { categories } from "../utils/menu";
 import CategoryItem from "./CategoryItem";
+
+import { FaChevronDown } from "react-icons/fa";
+import { FaChevronUp } from "react-icons/fa";
 
 import MenuItem from "./MenuItem";
 
 function Menu({ tableId }) {
-  const { category, handlePay, handleService } = useMenu();
+  const {
+    category,
+    handlePay,
+    handleService,
+    searchQuery,
+    setSearchQuery,
+    menu,
+    sortingOrder,
+    bubbleSort,
+  } = useMenu();
 
   return (
     <div className="flex gap-10 overflow-hidden">
@@ -29,11 +41,30 @@ function Menu({ tableId }) {
         </div>
       </div>
       <div className="flex flex-col gap-5 w-[600px] max-h-[800px] overflow-y-auto">
-        {menu.map((menuItem, i) =>
-          category === menuItem.category || category === "" ? (
-            <MenuItem tableId={tableId} key={i} item={menuItem} />
-          ) : null
-        )}
+        <input
+          placeholder="SEARCH FOR A PRODUCT..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="px-4 py-3 border rounded-sm focus:outline-none text-xl uppercase font-semibold"
+        />
+
+        <button
+          onClick={() => bubbleSort(menu, sortingOrder)}
+          className="flex items-center justify-center gap-2 uppercase border border-black text-xl font-semibold py-2 px-4 rounded-sm hover:text-white hover:bg-black transition"
+        >
+          sort by price
+          <span>{sortingOrder ? <FaChevronDown /> : <FaChevronUp />}</span>
+        </button>
+
+        {menu
+          .filter((menuItem) =>
+            menuItem.name.toUpperCase().includes(searchQuery.toUpperCase())
+          )
+          .map((menuItem, i) =>
+            category === menuItem.category || category === "" ? (
+              <MenuItem tableId={tableId} key={i} item={menuItem} />
+            ) : null
+          )}
       </div>
     </div>
   );
