@@ -26,6 +26,7 @@ class Login(BaseModel):
     name:str
     password:str
 
+
 def get_db():
     db = SessionLocal()
     try:
@@ -33,10 +34,6 @@ def get_db():
     finally:
         db.close()
 
-
-@app.post("/products/",response_model=schemas.Product)
-async def create_product(product:schemas.ProductCreate,db: Session = Depends(get_db)):
-    return crud.create_product(product=product, db=db)
 
 @app.get("/products/")#response_model=list[schemas.Product]
 async def get_product(db: Session = Depends(get_db)):
@@ -46,9 +43,13 @@ async def get_product(db: Session = Depends(get_db)):
 async def get_orders(db:Session= Depends(get_db)):
     return crud.get_orderdetail(db=db)
 
+@app.post("/orders/")
+async def create_order(createorder:schemas.OrderCreate,db:Session= Depends(get_db)):
+    return crud.create_orderinfo(ordercreate=createorder,db=db)
+
 @app.post("/login/")
 async def check_login(user_info:Login ,db:Session = Depends(get_db),status_code=201):
-    user = crud.get_user_by_username(username=user_info.name)
+    user = crud.get_user_by_username(username=user_info.name, db=db)
     if not user:
         raise HTTPException(
             status_code=404,

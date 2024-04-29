@@ -17,6 +17,9 @@ function Menu({ tableId }) {
     menu,
     sortingOrder,
     bubbleSort,
+    postOrder,
+    username,
+    carts,
   } = useMenu();
 
   return (
@@ -27,7 +30,10 @@ function Menu({ tableId }) {
         ))}
         <div className="bg-red-50 border p-3 h-full flex flex-col gap-5 ">
           <button
-            onClick={() => handlePay(tableId)}
+            onClick={() => {
+              handlePay(tableId);
+              postOrder(username, tableId, carts[tableId]);
+            }}
             className="text-center border px-4 py-2 uppercase font-semibold bg-red-200 hover:bg-red-300 transition"
           >
             Pay The Bill
@@ -37,6 +43,12 @@ function Menu({ tableId }) {
             className="text-center border px-4 py-2 uppercase font-semibold bg-red-200 hover:bg-red-300 transition"
           >
             Open Service
+          </button>
+          <button
+            onClick={() => handleService(tableId)}
+            className="text-center border px-4 py-2 uppercase font-semibold bg-red-200 hover:bg-red-300 transition"
+          >
+            Order History
           </button>
         </div>
       </div>

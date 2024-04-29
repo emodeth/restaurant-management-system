@@ -5,11 +5,12 @@ import { useNavigate } from "react-router-dom";
 function LoginPage() {
   const {
     isLoggedIn,
-    setIsLoggedIn,
     username,
     setUsername,
     password,
     setPassword,
+    postLogin,
+    errorMsg,
   } = useMenu();
   const navigate = useNavigate();
 
@@ -23,7 +24,14 @@ function LoginPage() {
   );
 
   return (
-    <div className="w-screen h-screen flex justify-center items-center">
+    <div
+      onKeyDown={(e) => {
+        if (e.key === "Enter") {
+          postLogin({ name: username, password });
+        }
+      }}
+      className="w-screen h-screen flex justify-center items-center"
+    >
       <div className="flex flex-col border px-[120px] py-[90px] items-center justify-between gap-5 rounded-sm bg-gray-100">
         <div className="uppercase font-semibold text-3xl mb-5">login page</div>
         <div className="flex gap-1 items-center justify-center">
@@ -47,11 +55,12 @@ function LoginPage() {
         </div>
 
         <button
-          onClick={() => setIsLoggedIn(true)}
+          onClick={() => postLogin({ name: username, password })}
           className="border py-2 px-10 uppercase font-bold mt-2 w-full text-white bg-black hover:text-black hover:bg-white transition"
         >
           Log in
         </button>
+        <p>{errorMsg}</p>
       </div>
     </div>
   );

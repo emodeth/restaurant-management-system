@@ -44,10 +44,44 @@ function MenuProvider({ children }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [menu, setMenu] = useState([]);
   const [sortingOrder, setSortingOrder] = useState(true); // true is descending order false is ascending order
+  const [errorMsg, setErrorMesg] = useState("");
 
   useEffect(function () {
     fetchProducts();
   }, []);
+
+  function postLogin(user) {
+    fetch("http://localhost:8000/login/", {
+      method: "POST",
+      body: JSON.stringify(user),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    }).then((res) => {
+      if (res.status === 200) {
+        setIsLoggedIn(true);
+        setErrorMesg("");
+      } else if (res.status === 401) {
+        setErrorMesg("Wrong Password!");
+      } else if (res.status === 404) {
+        setErrorMesg("User Not Found!");
+      }
+    });
+  }
+
+  function postOrder(username, tableId, order) {
+    fetch("http://localhost:8000/orders/", {
+      method: "POST",
+      body: JSON.stringify({
+        username,
+        tableId,
+        order,
+      }),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    });
+  }
 
   async function fetchProducts() {
     const res = await fetch("http://localhost:8000/products/");
@@ -187,6 +221,9 @@ function MenuProvider({ children }) {
         sortingOrder,
         setSortingOrder,
         bubbleSort,
+        postLogin,
+        errorMsg,
+        postOrder,
       }}
     >
       {children}

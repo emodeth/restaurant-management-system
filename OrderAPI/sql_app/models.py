@@ -1,7 +1,7 @@
 from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, Float
 from sqlalchemy.orm import relationship
 from .database import Base
-
+from sqlalchemy.sql import func
 
 class User(Base):
     __tablename__ = "users"
@@ -36,7 +36,7 @@ class Order(Base):
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey("users.id")) 
     table_id = Column(Integer)
-    time_created = Column(DateTime(timezone=True), server_default=f"now() AT TIME ZONE 'utc'")
+    time_created = Column(DateTime)
     user = relationship("User", backref="orders")  # hata olabilir
 
 
@@ -46,3 +46,4 @@ class OrderProduct(Base):
     order_id = Column(Integer, ForeignKey("orders.id"), primary_key=True)
     product_id = Column(Integer, ForeignKey("products.id"), primary_key=True)
     quantity = Column(Integer, nullable=False)  
+

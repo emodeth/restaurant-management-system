@@ -49,12 +49,12 @@ def create_product(db: Session, product: schemas.ProductCreate):
     db.refresh(db_prdct)
     return db_prdct
 
-def create_order(db: Session, order: schemas.OrderCreate): 
-    # Handle "time_created" if needed.
-    db_order = models.Order(user_id=order.user_id,table_id=order.table_id)
-    db.add(db_order)
-    db.commit()
-    db.refresh(db_order)
+# def create_order(db: Session, order: schemas.OrderCreate): 
+#     Handle "time_created" if needed.
+#     db_order = models.Order(user_id=order.user_id,table_id=order.table_id)
+#     db.add(db_order)
+#     db.commit()
+#     db.refresh(db_order)
 
 def create_orderproduct(db: Session, orderprdct: schemas.OrderProductCreate): 
     db_orderprdct = models.OrderProduct(order_id=orderprdct.order_id, product_id=orderprdct.product_id,quantity=orderprdct.quantity)
@@ -62,3 +62,25 @@ def create_orderproduct(db: Session, orderprdct: schemas.OrderProductCreate):
     db.commit()
     db.refresh(db_orderprdct)
 
+def create_orderinfo(db: Session, ordercreate: schemas.OrderCreate):
+    user = db.query(models.User).filter(models.User.username == ordercreate.username).first()
+
+    user_id = user.id
+
+    db_order = models.Order(user_id=user_id,table_id=ordercreate.tableId, time_created=datetime.now()) # time created patlayabilir
+    db.add(db_order)
+    
+    db.commit()
+    db.refresh(db_order)
+
+    order_products = []
+    for product in ordercreate.order:
+        order_products.append(models.OrderProduct(order_id=db_order.id, product_id=product.id, quantity=product.quantity))
+    db.add_all(order_products)
+    db.commit()
+    db.refresh(db_order)
+
+    return db_order
+
+
+    

@@ -40,6 +40,11 @@ class ProductBase(BaseModel):
 class ProductCreate(ProductBase):
     pass
 
+class ProductPost(ProductBase):
+    id:int
+    quantity:int
+    
+
 class Product(ProductBase):
     id: int
     category: CategoryBase | None
@@ -49,10 +54,12 @@ class Product(ProductBase):
 
 # Order
 class OrderBase(BaseModel):
-    user_id: int  # Foreign key referencing the user who placed the order
-    table_id: int
+    user_id: Optional[int] = None  # Foreign key referencing the user who placed the order
+    tableId: int
+
 class OrderCreate(OrderBase):
-    pass
+    username: str
+    order : list[ProductPost]
 
 
 class Order(OrderBase):
