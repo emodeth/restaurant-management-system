@@ -2,10 +2,16 @@ from fastapi import Depends, FastAPI, HTTPException, status
 from sqlalchemy.orm import Session
 from . import crud, models, schemas
 from .database import SessionLocal, engine
+from pydantic import BaseModel
+
 
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
+
+class Login(BaseModel):
+    name:str
+    password:str
 
 def get_db():
     db = SessionLocal()
@@ -28,14 +34,14 @@ def get_orders(db:Session= Depends(get_db)):
     return crud.get_orderdetail(db=db)
 
 @app.post("/login/")
-def check_login(username:str, password:str, db:Session = Depends(get_db),status_code=201):
-    user = crud.get_user_by_username(username=username)
+def check_login(user_info:Login ,db:Session = Depends(get_db),status_code=201):
+    user = crud.get_user_by_username(username=user_info.name)
     if not user:
         raise HTTPException(
             status_code=404,
             detail="User not found",
         )
-    if user.hashed_password!=password:
+    if user.hashed_password!=user_info.password:
         raise HTTPException(
             status_code=401,
             detail="Unauthorized",
