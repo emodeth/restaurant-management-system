@@ -23,8 +23,8 @@ def get_orderdetail(db: Session, table_id: int):
 def get_user_by_username(db: Session, username: str):
     user =  db.query(models.User).filter(models.User.username == username).first()
     if user:
-        if user["password"]:
-            pass
+        return user
+    return None
 
     
 # create operations
