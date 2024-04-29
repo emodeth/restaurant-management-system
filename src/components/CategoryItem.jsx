@@ -4,10 +4,10 @@ function CategoryItem({ _category }) {
   const { category, setCategory } = useMenu();
 
   function handleCategory() {
-    if (category === _category) {
+    if (category === _category.categoryId) {
       setCategory("");
     } else {
-      setCategory(_category);
+      setCategory(_category.categoryId);
     }
   }
 
@@ -17,7 +17,9 @@ function CategoryItem({ _category }) {
       className="py-6 px-8 border flex items-center justify-between bg-red-50 text-center cursor-pointer hover:bg-red-100 transition"
     >
       <p className="uppercase font-semibold text-center block w-full text-2xl select-none">
-        {_category === "main-dish" ? "Main Dish" : _category}
+        {_category.categoryName === "main-dish"
+          ? "Main Dish"
+          : _category.categoryName}
       </p>
     </div>
   );

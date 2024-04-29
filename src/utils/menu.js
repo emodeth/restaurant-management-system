@@ -138,4 +138,9 @@ export const menu = [
   },
 ];
 
-export const categories = ["soup", "main-dish", "beverage", "dessert"];
+export const categories = [
+  { categoryName: "soup", categoryId: 1 },
+  { categoryName: "main-dish", categoryId: 2 },
+  { categoryName: "beverage", categoryId: 3 },
+  { categoryName: "dessert", categoryId: 4 },
+];

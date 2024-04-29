@@ -17,7 +17,7 @@ class Category(Base):
 
     id = Column(Integer, primary_key=True)
     category_name = Column(String, unique=True)
-
+    products = relationship("Product", back_populates="categories")
 
 class Product(Base):
     __tablename__ = "products"
@@ -27,7 +27,7 @@ class Product(Base):
     description = Column(String)
     price = Column(Float)
     category_id = Column(Integer, ForeignKey("categories.id")) 
-    category = relationship("Category", back_populates="products")  # hata olabilir
+    categories = relationship("Category", back_populates="products")  
 
 
 class Order(Base):

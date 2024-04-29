@@ -23,7 +23,7 @@ function Menu({ tableId }) {
     <div className="flex gap-10 overflow-hidden">
       <div className="flex flex-col gap-4">
         {categories.map((category) => (
-          <CategoryItem key={category} _category={category} />
+          <CategoryItem key={category.categoryId} _category={category} />
         ))}
         <div className="bg-red-50 border p-3 h-full flex flex-col gap-5 ">
           <button
@@ -61,7 +61,7 @@ function Menu({ tableId }) {
             menuItem.name.toUpperCase().includes(searchQuery.toUpperCase())
           )
           .map((menuItem, i) =>
-            category === menuItem.category || category === "" ? (
+            category === menuItem.category_id || category === "" ? (
               <MenuItem tableId={tableId} key={i} item={menuItem} />
             ) : null
           )}

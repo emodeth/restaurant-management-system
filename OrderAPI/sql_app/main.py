@@ -38,7 +38,7 @@ def get_db():
 async def create_product(product:schemas.ProductCreate,db: Session = Depends(get_db)):
     return crud.create_product(product=product, db=db)
 
-@app.get("/products/",response_model=list[schemas.Product])
+@app.get("/products/")#response_model=list[schemas.Product]
 async def get_product(db: Session = Depends(get_db)):
     return crud.get_products(db=db)
 
