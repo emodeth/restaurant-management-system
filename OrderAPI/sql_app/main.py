@@ -3,11 +3,24 @@ from sqlalchemy.orm import Session
 from . import crud, models, schemas
 from .database import SessionLocal, engine
 from pydantic import BaseModel
-
+from fastapi.middleware.cors import CORSMiddleware
 
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
+
+origins =[
+    "http://localhost",
+    "http://localhost:5173", 
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 class Login(BaseModel):
     name:str
@@ -22,19 +35,19 @@ def get_db():
 
 
 @app.post("/products/",response_model=schemas.Product)
-def create_product(product:schemas.ProductCreate,db: Session = Depends(get_db)):
+async def create_product(product:schemas.ProductCreate,db: Session = Depends(get_db)):
     return crud.create_product(product=product, db=db)
 
 @app.get("/products/",response_model=list[schemas.Product])
-def get_product(db: Session = Depends(get_db)):
+async def get_product(db: Session = Depends(get_db)):
     return crud.get_products(db=db)
 
 @app.get("/orders/")
-def get_orders(db:Session= Depends(get_db)):
+async def get_orders(db:Session= Depends(get_db)):
     return crud.get_orderdetail(db=db)
 
 @app.post("/login/")
-def check_login(user_info:Login ,db:Session = Depends(get_db),status_code=201):
+async def check_login(user_info:Login ,db:Session = Depends(get_db),status_code=201):
     user = crud.get_user_by_username(username=user_info.name)
     if not user:
         raise HTTPException(

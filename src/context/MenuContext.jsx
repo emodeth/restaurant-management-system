@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { menu as menuUtil } from "../utils/menu";
 
 const MenuContext = createContext();
@@ -45,6 +45,16 @@ function MenuProvider({ children }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [menu, setMenu] = useState(menuUtil);
   const [sortingOrder, setSortingOrder] = useState(true); // true is descending order false is ascending order
+
+  useEffect(function () {
+    fetchProducts();
+  }, []);
+
+  function fetchProducts() {
+    fetch("http://localhost:8000/products", {
+      mode: "no-cors",
+    }).then((response) => console.log(response));
+  }
 
   function bubbleSort(array, order) {
     const length = array.length;
