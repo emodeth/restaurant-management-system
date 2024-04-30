@@ -45,10 +45,18 @@ function MenuProvider({ children }) {
   const [menu, setMenu] = useState([]);
   const [sortingOrder, setSortingOrder] = useState(true); // true is descending order false is ascending order
   const [errorMsg, setErrorMesg] = useState("");
+  const [orderHistory, setOrderHistory] = useState([]);
 
   useEffect(function () {
     fetchProducts();
   }, []);
+
+  async function fetchOrderHistory(tableId) {
+    const res = await fetch(`http://localhost:8000/orders/${tableId}`);
+    const data = await res.json();
+    console.log(data);
+    setOrderHistory(data);
+  }
 
   function postLogin(user) {
     fetch("http://localhost:8000/login/", {
@@ -224,6 +232,9 @@ function MenuProvider({ children }) {
         postLogin,
         errorMsg,
         postOrder,
+        fetchOrderHistory,
+        orderHistory,
+        setOrderHistory,
       }}
     >
       {children}

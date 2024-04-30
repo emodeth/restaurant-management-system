@@ -39,9 +39,9 @@ def get_db():
 async def get_product(db: Session = Depends(get_db)):
     return crud.get_products(db=db)
 
-@app.get("/orders/")
-async def get_orders(db:Session= Depends(get_db)):
-    return crud.get_orderdetail(db=db)
+@app.get("/orders/{table_id}")
+async def read_item(table_id,db:Session= Depends(get_db)):
+    return crud.get_orderdetail(table_id=table_id,db=db)
 
 @app.post("/orders/")
 async def create_order(createorder:schemas.OrderCreate,db:Session= Depends(get_db)):

@@ -10,13 +10,26 @@ def get_products(db: Session):
     return db.query(models.Product).all()
 
 def get_orderdetail(db: Session, table_id: int):
-    orders = db.query(models.Order) \
-               .join(models.OrderProduct, models.Order.id == models.OrderProduct.order_id) \
+    
+    
+    orders = db.query(models.OrderProduct,models.Order,models.Product, models.User) \
+               .join(models.Order, models.Order.id == models.OrderProduct.order_id) \
+               .join(models.Product, models.Product.id==models.OrderProduct.product_id) \
+               .join(models.User, models.User.id == models.Order.user_id) \
                .filter(models.Order.table_id == table_id) \
                .all()
-
-    if orders:
-        return [dict(row) for row in orders]
+    
+    processed_orders = []
+    for order_product, order, product, user in orders:
+        processed_orders.append({
+            "order_id": order.id,
+            "product_name": product.name,
+            "quantity": order_product.quantity,
+            "time_created": order.time_created,
+            "user_name": user.username,
+    })
+    if processed_orders:
+        return processed_orders
     else:
         return None
 
@@ -25,7 +38,6 @@ def get_user_by_username(db: Session, username: str):
     if user:
         return user
     return None
-
     
 # create operations
 def create_user(db: Session, user: schemas.UserCreate):
@@ -48,13 +60,6 @@ def create_product(db: Session, product: schemas.ProductCreate):
     db.commit()
     db.refresh(db_prdct)
     return db_prdct
-
-# def create_order(db: Session, order: schemas.OrderCreate): 
-#     Handle "time_created" if needed.
-#     db_order = models.Order(user_id=order.user_id,table_id=order.table_id)
-#     db.add(db_order)
-#     db.commit()
-#     db.refresh(db_order)
 
 def create_orderproduct(db: Session, orderprdct: schemas.OrderProductCreate): 
     db_orderprdct = models.OrderProduct(order_id=orderprdct.order_id, product_id=orderprdct.product_id,quantity=orderprdct.quantity)
@@ -81,6 +86,3 @@ def create_orderinfo(db: Session, ordercreate: schemas.OrderCreate):
     db.refresh(db_order)
 
     return db_order
-
-
-    

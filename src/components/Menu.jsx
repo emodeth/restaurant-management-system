@@ -6,6 +6,7 @@ import { FaChevronDown } from "react-icons/fa";
 import { FaChevronUp } from "react-icons/fa";
 
 import MenuItem from "./MenuItem";
+import { useNavigate } from "react-router-dom";
 
 function Menu({ tableId }) {
   const {
@@ -21,6 +22,8 @@ function Menu({ tableId }) {
     username,
     carts,
   } = useMenu();
+
+  const navigate = useNavigate();
 
   return (
     <div className="flex gap-10 overflow-hidden">
@@ -45,7 +48,7 @@ function Menu({ tableId }) {
             Open Service
           </button>
           <button
-            onClick={() => handleService(tableId)}
+            onClick={() => navigate(`/orders/${tableId}`)}
             className="text-center border px-4 py-2 uppercase font-semibold bg-red-200 hover:bg-red-300 transition"
           >
             Order History
