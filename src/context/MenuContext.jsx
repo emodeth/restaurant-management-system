@@ -184,6 +184,8 @@ function MenuProvider({ children }) {
   }
 
   function handlePay(tableId) {
+    if (carts[tableId].length == 0) return;
+
     setCarts((prevCarts) => ({
       ...prevCarts,
       [tableId]: [],
